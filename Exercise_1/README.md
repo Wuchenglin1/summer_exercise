@@ -12,6 +12,8 @@
 
 **Changed**
 
+![image-20220716182326887](http://110.42.184.72:8090/image-5.png)
+
 ![image-20220716182118236](http://110.42.184.72:8090/image-3.png)
 
 ![image-20220716182058573](http://110.42.184.72:8090/image-4.png)
@@ -22,15 +24,17 @@
 
 bad:clown_face: :thumbsdown:
 
-![image-20220716182326887](http://110.42.184.72:8090/image-5.png)
+![image-20220716182400756](http://110.42.184.72:8090/image-6.png)
+
+
 
 good:stuck_out_tongue_winking_eye: :thumbsup:
 
-![image-20220716182400756](http://110.42.184.72:8090/image-6.png)
+![image-20220716182400756](http://110.42.184.72:8090/image-7.png)
 
 ### 匿包侠
 
-使用一大堆看不懂的包名放在前面，也不用写任何注释，让看代码的学长根本猜不透该包的作用，不添加任何作者的信息，方便随时跑路
+使用一看不懂的包名放在前面，也不用写任何注释，让看代码的学长根本猜不透该包的作用，不添加任何作者的信息，方便随时跑路
 
 bad:clown_face: :thumbsdown:
 
@@ -60,11 +64,11 @@ good:stuck_out_tongue_winking_eye: :thumbsup:
 
 bad:clown_face: :thumbsdown:
 
-![image-20220716195759229](http://110.42.184.72:8090/image-16.png)
+![image-20220716195759229](http://110.42.184.72:8090/image-15.png)
 
 good:stuck_out_tongue_winking_eye: :thumbsup:
 
-![image-20220716195856667](http://110.42.184.72:8090/image-15.png)
+![image-20220716195856667](http://110.42.184.72:8090/image-16.png)
 
 ### 神奇的孤勇者
 
