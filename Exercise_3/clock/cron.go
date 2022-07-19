@@ -87,7 +87,6 @@ func (c *Cron) startUpTask() {
 	nowTime := time.Now()
 	for _, task := range c.Tasks {
 		task.Next = task.Schedule.Next(nowTime)
-		fmt.Println(task.TaskID, task.Next)
 	}
 	//这里借鉴了golang cron包的 `run` 实现方法 https://github.com/robfig/cron/blob/master/cron.go
 	for {
@@ -104,7 +103,7 @@ func (c *Cron) startUpTask() {
 			//用下一次执行程序的时间与现在时间计算间隔得到等待时间
 			newTimer = time.NewTimer(c.Tasks[0].Next.Sub(nowTime))
 		}
-
+		fmt.Println("间隔时间：", c.Tasks[0].Next.Sub(nowTime))
 		for {
 			select {
 			case nowTime = <-newTimer.C:
@@ -118,6 +117,7 @@ func (c *Cron) startUpTask() {
 					t.setup()
 					t.Prev = t.Next
 					t.Next = t.Schedule.Next(nowTime)
+					fmt.Println(t.Prev, t.Next)
 				}
 			case newTask := <-c.add:
 				nowTime = time.Now()

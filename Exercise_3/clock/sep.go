@@ -100,6 +100,7 @@ WRAP:
 	return t.In(loc)
 }
 
+//math 查看schedule是否存在该key
 func (s *SepSchedule) match(schedule []Schedule, key uint) bool {
 	for _, sd := range schedule {
 		if sd.hasStep {
