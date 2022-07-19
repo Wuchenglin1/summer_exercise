@@ -48,17 +48,14 @@ func (c *Cron) Run() {
 	}
 	//如果还没有启动的话就更改cron状态
 	c.IsRunning = true
-	go c.run()
-}
-
-func (c *Cron) run() {
-
+	go c.startUpTask()
 }
 
 // AddFunction AddFunc 通过解析sep的表达式来获取定时任务的间隔等等，function为自定义函数
 //返回启动Cron的任务ID和nil（如果error为空的话）
 func (c *Cron) AddFunction(sep string, function func()) (int, error) {
 	sepS, err := c.Parse.ParseSep(sep)
+	fmt.Println(sepS)
 	if err != nil {
 		return 0, fmt.Errorf("%v 解析失败: %v", sep, err)
 	}
@@ -90,6 +87,7 @@ func (c *Cron) startUpTask() {
 	nowTime := time.Now()
 	for _, task := range c.Tasks {
 		task.Next = task.Schedule.Next(nowTime)
+		fmt.Println(task.TaskID, task.Next)
 	}
 	//这里借鉴了golang cron包的 `run` 实现方法 https://github.com/robfig/cron/blob/master/cron.go
 	for {
@@ -106,15 +104,20 @@ func (c *Cron) startUpTask() {
 			//用下一次执行程序的时间与现在时间计算间隔得到等待时间
 			newTimer = time.NewTimer(c.Tasks[0].Next.Sub(nowTime))
 		}
+
 		for {
 			select {
 			case nowTime = <-newTimer.C:
+				nowTime = nowTime.In(time.Local)
+
 				for _, t := range c.Tasks {
 					if t.Next.IsZero() {
 						//下一次执行的时间为零即任务完成之后跳出循环
 						break
 					}
-
+					t.setup()
+					t.Prev = t.Next
+					t.Next = t.Schedule.Next(nowTime)
 				}
 			case newTask := <-c.add:
 				nowTime = time.Now()
@@ -130,6 +133,9 @@ func (c *Cron) startUpTask() {
 
 func (t *Task) setup() {
 	go func() {
+		i := 0
+		fmt.Println(i)
+		i++
 		t.Job()
 	}()
 }

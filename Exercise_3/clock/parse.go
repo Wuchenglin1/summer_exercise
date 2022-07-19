@@ -9,7 +9,7 @@ import (
 
 //bounds second minute hour day month dotw 的范围
 type bounds struct {
-	max, min int //最大，最小
+	max, min uint //最大，最小
 }
 
 type Parser struct {
@@ -55,6 +55,7 @@ func (p Parser) ParseSep(sep string) (SepSchedule, error) {
 		if len(fields) != 6 {
 			return schedule, fmt.Errorf("已经开启了秒级定时器，但sep参数个数不为6，而是%v", len(fields))
 		}
+		fields = []string{fields[1], fields[2], fields[3], fields[4], fields[5], fields[0]}
 	} else {
 		//不开启秒级 5 个参数
 		if len(fields) != 5 {
@@ -72,6 +73,7 @@ func (p Parser) ParseSep(sep string) (SepSchedule, error) {
 	}
 
 	//获取时间间隔
+
 	var (
 		second []Schedule
 		minute = f(fields[0], _minute)
@@ -84,10 +86,8 @@ func (p Parser) ParseSep(sep string) (SepSchedule, error) {
 		second = f(fields[5], _second)
 	}
 	close(ch)
-	for range ch {
-		if err = <-ch; err != nil {
-			return schedule, err
-		}
+	if len(ch) != 0 {
+		return schedule, <-ch
 	}
 	return SepSchedule{
 		Second: second,
@@ -141,6 +141,7 @@ func GetField(field string, b bounds) (s []Schedule, err error) {
 			case 1:
 				// x 或者 x/y 的形式 结束时间和开始时间设为相同的
 				// 在 field 内的 x 执行一次任务
+				s[k].step = 1
 				s[k].end, err = parseInt(minAndMax[0])
 				if err != nil {
 					return nil, err
@@ -163,7 +164,7 @@ func GetField(field string, b bounds) (s []Schedule, err error) {
 		case 1:
 			//没有 `/`
 			s[k].hasStep = false
-			s[k].end = b.max
+			//s[k].end = b.max
 		case 2:
 			//有 `/`
 			s[k].hasStep = true
@@ -193,7 +194,7 @@ func GetField(field string, b bounds) (s []Schedule, err error) {
 	return s, err
 }
 
-func parseInt(exp string) (int, error) {
+func parseInt(exp string) (uint, error) {
 	n, err := strconv.Atoi(exp)
 	if err != nil {
 		return 0, fmt.Errorf("不能将 %v 解析成数字 错误 : %v", exp, err)
@@ -201,5 +202,5 @@ func parseInt(exp string) (int, error) {
 	if n < 0 {
 		return 0, fmt.Errorf("%v 是一个小于0的数字，无法设置时长 ", n)
 	}
-	return n, nil
+	return uint(n), nil
 }

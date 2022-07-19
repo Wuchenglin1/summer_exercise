@@ -2,19 +2,29 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"summer/summer_exercise/Exercise_3/clock"
 	"time"
 )
 
 func main() {
 	cron := clock.New(clock.WithSecond(true))
-	i, err := cron.AddFunction("1 * * * * *", func() {
-		fmt.Println("5s")
+	i, err := cron.AddFunction("1/5 * * * * *", func() {
+		fmt.Println("啦啦啦啦啦啦我是")
 	})
 	if err != nil {
-		log.Fatalf("error : %v", err)
+		fmt.Println(i, err)
+		return
 	}
-	fmt.Println(i)
-	time.Sleep(time.Second * 10)
+	i, err = cron.AddFunction("2/5 * * * * *", func() {
+		fmt.Println("呜呜呜呜呜呜呜呜")
+	})
+	if err != nil {
+		fmt.Println(i, err)
+		return
+	}
+	cron.Run()
+	for {
+		fmt.Println(time.Now())
+		time.Sleep(time.Second * 1)
+	}
 }
