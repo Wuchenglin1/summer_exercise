@@ -3,6 +3,7 @@ package schema
 import (
 	"go/ast"
 	"reflect"
+	"strings"
 	"summer/summer_exercise/corm/dialect"
 )
 
@@ -19,6 +20,9 @@ type Field struct {
 	Name string
 	Type string
 	Tag  string //标签 表示 `corm:"<tagName>:<tag>"`
+	//Null    bool
+	//Key     string
+	//Default any
 }
 
 //GetField 获取Schema中某个具体的字段信息
@@ -28,6 +32,7 @@ func (s *Schema) GetField(name string) *Field {
 
 // ParseType Parse 将structure结构体中的每一个字段解析成对应dialect中每一个字段并存储到返回的Schema中
 func ParseType(structure any, dialect dialect.Dialector) *Schema {
+	var finalTag string
 	v := reflect.ValueOf(structure)
 	//处理指针
 	if v.Kind() == reflect.Ptr {
@@ -55,9 +60,15 @@ func ParseType(structure any, dialect dialect.Dialector) *Schema {
 			}
 			//获取tag标签
 			tag, ok := field.Tag.Lookup("corm")
-			//对tag的进一步处理 todo
+			//对tag的进一步处理
+			tags := strings.Split(tag, ";")
+			if len(tags) != 1 {
+				finalTag = strings.Join(tags, " ")
+			} else {
+				finalTag = tag
+			}
 			if ok {
-				f.Tag = tag
+				f.Tag = finalTag
 			}
 			//将field装到schema中
 			schema.Fields[f.Name] = f
