@@ -17,7 +17,7 @@ type User struct {
 var db *DB
 
 func init() {
-	database, err := Open("mysql", "root:Wcl2021214174..@tcp(110.42.184.72:3306)/test?charset=utf8")
+	database, err := Open("", "")
 	if err != nil {
 		log.Fatalf("open sql error : %v", err)
 		return
