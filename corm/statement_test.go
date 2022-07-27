@@ -17,7 +17,7 @@ type User struct {
 var db *DB
 
 func init() {
-	database, err := Open("", "")
+	database, err := Open("driver name", "your DSN")
 	if err != nil {
 		log.Fatalf("open sql error : %v", err)
 		return
@@ -182,7 +182,7 @@ func TestDB_First(t *testing.T) {
 	db.Model(&User{}).dropTable()
 	db.Create(&User{"xiaoming", 18}, &User{"xiaohai", 20}, &User{"xiaozheng", 28})
 	u := User{}
-	err := db.Model(&User{}).First(u)
+	err := db.Model(&User{}).First(&u)
 	if err != nil {
 		t.Fatalf("First data error : %v", err)
 	} else {
@@ -190,10 +190,16 @@ func TestDB_First(t *testing.T) {
 	}
 }
 
+type TestUser struct {
+	A string `corm:"PRIMARY KEY"`
+	C int
+	D string
+	E uint
+}
+
 func TestMigrator_CurrentDatabase(t *testing.T) {
-	//var want = "test"
-	//dataBaseName := db.Migrator().CurrentDatabase()
-	//if dataBaseName != want {
-	//	t.Fatalf("out current database name : %v but want : %v", dataBaseName, want)
-	//}
+	err := db.Migrator().AutoMigrate(&TestUser{})
+	if err != nil {
+		t.Fatalf("migrator error : %v", err)
+	}
 }
